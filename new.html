@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Be My Valentine?</title>
+    <style>
+        :root {
+            --primary-pink: #ff4d6d;
+            --dark-romance: #2b0d13;
+            --soft-white: #fff0f3;
+            --whatsapp-green: #25D366;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Apple SD Gothic Neo', 'Segoe UI', Roboto, sans-serif;
+            background-color: #000;
+        }
+
+        .app-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: 1;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.2);
+            filter: blur(10px);
+        }
+
+        /* --- Landing Screen --- */
+        #landing-screen {
+            background-color: var(--primary-pink); 
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0); /* Slightly more transparent */
+            backdrop-filter: blur(5px); /* Reduced blur for better visibility of background */
+            padding: 2.5rem 1.5rem;
+            border-radius: 40px;
+            text-align: center;
+            width: 85%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            animation: appEntry 1.2s ease-out;
+            z-index: 2;
+        }
+
+        @keyframes appEntry {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        button, .msg-btn {
+            padding: 20px;
+            border-radius: 20px;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button:active { transform: scale(0.95); }
+
+        .btn-yes {
+            background: var(--primary-pink);
+            color: white;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.5);
+        }
+
+        .btn-no {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Full-screen Media Logic */
+        .media-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        /* Dark overlay for the landing image to keep text readable */
+        .img-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.2); /* Reduced opacity for better visibility */
+            z-index: 0;
+        }
+
+        .success-content {
+            text-align: center;
+            color: white;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .success-content h2 {
+            font-size: 3.5rem;
+            font-weight: 200;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .msg-btn {
+            background: var(--whatsapp-green);
+            color: white;
+            width: 80%;
+            max-width: 300px;
+            margin: 0 auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            animation: slideUp 0.8s ease-out 1s both;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .death-text {
+            color: #ff0000;
+            font-size: 4rem;
+            font-weight: 900;
+            animation: glitch 0.2s infinite;
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+
+        .btn-retry {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid white;
+            backdrop-filter: blur(5px);
+            font-size: 1rem;
+            padding: 12px 30px;
+            margin-top: 20px;
+            z-index: 20;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(2px, -2px); }
+            50% { transform: translate(-2px, 2px); }
+            100% { transform: translate(0); }
+        }
+
+        .heart-particle {
+            position: absolute;
+            pointer-events: none;
+            animation: floatUp 4s linear forwards;
+            z-index: 10;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 1; transform: translateY(80vh) scale(1); }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <section id="landing-screen" class="screen">
+        <!-- 1. LANDING IMAGE USING SRC -->
+        <img src="IMG_9626.PNG" class="media-bg" alt="Background">
+        <div class="img-overlay"></div>
+        
+        <div class="glass-card">
+            <h1>Will you be my Valentine? 💕</h1>
+            <div class="btn-group">
+                <button class="btn-yes" onclick="celebrate()">💖 YES, ALWAYS</button>
+                <button class="btn-no" onclick="die()">😈 NO</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="success-screen" class="screen hidden">
+        <!-- 2. SUCCESS VIDEO IN .MP4 FORMAT -->
+        <video id="success-video" class="media-bg" loop muted playsinline>
+            <source src="WhatsApp Video 2026-02-14 at 6.34.09 AM.mp4" type="video/mp4">
+        </video>
+        <div class="success-content">
+            <h2>I love you ❤️</h2>
+            <a href="https://wa.me/?text=I%20said%20YES!%20💍" class="msg-btn">
+                Tell me on WhatsApp 💌
+            </a>
+        </div>
+    </section>
+
+    <section id="death-screen" class="screen hidden">
+        <!-- 3. REJECTION VIDEO IN .MP4 FORMAT -->
+        <video id="death-video" class="media-bg" playsinline muted loop>
+            <source src="WhatsApp Video 2026-02-14 at 6.37.20 AM.mp4" type="video/mp4">
+        </video>
+        <h1 class="death-text">DEAD 💀</h1>
+        <button class="btn-retry" onclick="resetApp()">Try Again? 🔄</button>
+    </section>
+
+</div>
+
+<script>
+    const landing = document.getElementById('landing-screen');
+    const success = document.getElementById('success-screen');
+    const death = document.getElementById('death-screen');
+    const successVideo = document.getElementById('success-video');
+    const deathVideo = document.getElementById('death-video');
+
+    function celebrate() {
+        landing.classList.add('hidden');
+        success.classList.remove('hidden');
+        successVideo.play().catch(e => console.log("Video missing or blocked", e));
+        for(let i = 0; i < 30; i++) setTimeout(createHeart, i * 100);
+        window.heartInterval = setInterval(createHeart, 400);
+    }
+
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart-particle');
+        heart.innerHTML = ['❤️', '💖', '✨', '🌸'][Math.floor(Math.random() * 4)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+    }
+
+    function die() {
+        landing.style.filter = 'invert(1) grayscale(1)';
+        setTimeout(() => {
+            landing.classList.add('hidden');
+            death.classList.remove('hidden');
+            deathVideo.play().catch(e => console.log("Video missing or blocked", e));
+        }, 400);
+    }
+
+    function resetApp() {
+        deathVideo.pause();
+        deathVideo.currentTime = 0;
+        landing.style.filter = '';
+        death.classList.add('hidden');
+        landing.classList.remove('hidden');
+        if (window.heartInterval) clearInterval(window.heartInterval);
+    }
+
+    document.addEventListener('touchmove', (e) => {
+        if (e.target.closest('.screen')) e.preventDefault();
+    }, { passive: false });
+</script>
+
+</body>
+</html>
